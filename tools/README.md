@@ -8,11 +8,17 @@ These are tools for managing the notebooks in this repository.
 
 - ``export_all_as_md_pdf_and_odp.py``: this script exports everything as pdf and odp files. Requires a local install of pandoc and odpdown (use the follwing 'source activate py2_etl_lrs' then run in this environment)
 
-when chained together they can be used to export and convert to pptx (powerpoint)
+when chained together they can be used to export and convert to pptx (powerpoint).
 
-source activate py2_lrs_etl && python add_navigation.py && python export_all_as_md_pdf_and_odp.py 
+I set up a new conda env for this (py27) whihc is a basic environment.
 
-source activate py2_lrs_etl && python add_navigation.py && python export_all_as_md_pdf_and_odp.py && python generate_contents.py && cd ../notebooks/exports && touch delme.pptx && rm *.pptx && soffice --headless --convert-to pptx *.odp && rm *.odp && cd ../../tools
+This also needs odpdown installing:
+
+> pip install odpdown
+
+source activate py27 && python add_navigation.py && python export_all_as_md_pdf_and_odp.py
+
+source activate py27 && python add_navigation.py && python export_all_as_md_pdf_and_odp.py && python generate_contents.py && cd ../notebooks/exports && touch delme.pptx && rm *.pptx && soffice --headless --convert-to pptx *.odp && rm *.odp && cd ../../tools
 
 
 pandoc -f markdown  -N -V /home/beckant/git_shares/RoSRepositories/lr-workshop-master-material/notebooks/exports/20171222_workbook_export.md  --toc -o /home/beckant/git_shares/RoSRepositories/lr-workshop-master-material/notebooks/exports/20171222_workbook_export.docx

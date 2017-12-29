@@ -5,8 +5,7 @@
 # 
 # > source activate py2_lrs_etl
 
-# In[21]:
-
+# In[1]:
 
 import os
 import re
@@ -25,8 +24,7 @@ NOTEBOOK_DIR = os.path.join(os.path.dirname(__file__), '..', 'notebooks')
 REG = re.compile(r'(\d\d)\.(\d\d)-(.*)\.ipynb')
 
 
-# In[22]:
-
+# In[2]:
 
 #  Set current directory as working directory - when working in jupyter
 # (Change this if appropriate)
@@ -36,8 +34,7 @@ REG = re.compile(r'(\d\d)\.(\d\d)-(.*)\.ipynb')
 #print(NOTEBOOK_DIR)
 
 
-# In[44]:
-
+# In[3]:
 
 def iter_notebooks():
     return sorted(nb for nb in os.listdir(NOTEBOOK_DIR) if REG.match(nb))
@@ -53,7 +50,7 @@ def export_ipynb_to_md(fileLoc,output_md):
     # strip any navigation text
     cLS = "sed -i '/^</d' " +fileLoc+"md"
     os.system(cLS)
-    cLS = "sed -i '/^| \[/d' " +fileLoc+"md"
+    cLS = "sed -i '/^| /d' " +fileLoc+"md"
     os.system(cLS)
     # strip any svg issue
     cLS = "sed -i '/^!\[svg/d' " +fileLoc+"md"
@@ -70,14 +67,14 @@ def export_ipynb_to_md(fileLoc,output_md):
 def export_ipynb_to_md_odp(fileLoc,output_md):
     
     #fileLoc = os.path.join( NOTEBOOK_DIR, nb )[:-5]
-    #print(fileLoc)
+    print(fileLoc)
     # convert notebook to markdown and clear any output cells: this is a bit unfortunate as I now want to keep some of these output cells
     #cLS = 'jupyter nbconvert --to markdown --ClearOutputPreprocessor.enabled=True ' +fileLoc+'ipynb'
     ##### I really want this to work but it doesn't (well it does in the terminal but not as cLS)
     ##### jupyter nbconvert --to markdown --ExtractOutputPreprocessor.enabled=True 05.00-Proof-of-concept.ipynb
     #cLS = 'jupyter nbconvert --to markdown --ExtractOutputPreprocessor.enabled=True ' +fileLoc+'ipynb'
     cLS = 'jupyter nbconvert --to markdown ' +fileLoc+'ipynb'
-    #print(cLS)
+    print(cLS)
     os.system(cLS)
     # strip any navigation text
     cLS = "sed -i '/^</d' " +fileLoc+"md"
@@ -98,7 +95,7 @@ def export_ipynb_to_md_odp(fileLoc,output_md):
     cLS = "cat " +fileLoc+"md >>  " +output_md
     os.system(cLS)
     # strip out tables which aren't currently supported and place in temporary file
-    cLS = "sed '/^|/d' " +fileLoc+"md > delme.md"
+    #cLS = "sed '/^|/d' " +fileLoc+"md > delme.md"
     #cLS = "sed '/^|/d' " +fileLoc+"md > "+fileLoc+"delme.md"
     os.system(cLS)
 
@@ -110,9 +107,16 @@ def export_ipynb_to_md_odp(fileLoc,output_md):
     odp_template = os.path.join( os.path.dirname(NOTEBOOK_DIR), 'tools','discreet-dark.odp' )
 
     # export as ODP presentation using odpdown
-    cLS = "odpdown --break-master=Discreet_25_20Dark1 --content-master=Discreet_25_20Dark delme.md "+odp_template+" "+output_odp
-    
+    #cLS = "odpdown --break-master=Discreet_25_20Dark1 --content-master=Discreet_25_20Dark delme.md "+odp_template+" "+output_odp
+    cLS = "odpdown --break-master=Discreet_25_20Dark1 --content-master=Discreet_25_20Dark " +fileLoc+"md "+odp_template+" "+output_odp
     os.system(cLS)
+    
+    # export as ODP presentation to powerpoint
+    #cLS = "soffice --headless --convert-to pptx "+output_odp
+    #cLS = "cd ../notebooks/exports && soffice --headless --convert-to pptx "+output_odp+" && rm *.odp && cd ../../tools"
+    #print(cLS)
+    #os.system(cLS)
+       
     #delete source md file (if exists)
     try:
         os.remove(fileLoc+'md')
@@ -125,8 +129,7 @@ def export_ipynb_to_md_odp(fileLoc,output_md):
         pass
 
 
-# In[45]:
-
+# In[7]:
 
 #get timestamp
 timestr = time.strftime("%Y%m%d")
@@ -161,8 +164,7 @@ for nb in iter_notebooks():
 # * make sure there are no ### headers
 # 
 
-# In[28]:
-
+# In[5]:
 
 #Convert markdown to ODP
 
@@ -197,8 +199,7 @@ except OSError:
 # 
 # 
 
-# In[29]:
-
+# In[ ]:
 
 #Convert markdown to PDF
 
@@ -206,6 +207,12 @@ except OSError:
 output_pdf = os.path.join( NOTEBOOK_DIR, 'exports',timestr+'_workbook_export.pdf' )
 
 cLS = "pandoc -f markdown -t latex -N -V geometry:margin=1in " +output_md+" --latex-engine=xelatex --toc -o "+output_pdf
+print(cLS)
 os.system(cLS)
 #!!pandoc -f markdown -t latex -N -V geometry:margin=1in {output_md} --latex-engine=xelatex --toc -o {output_pdf}
+
+
+# In[ ]:
+
+
 

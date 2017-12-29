@@ -12,6 +12,22 @@ Git update
 * git commit -m 'insert comment'
 * git push -u origin master
 
+# Formatting
+
+**Tables don;t work natively**
+
+There has been a branch fix [which is discussed here](https://github.com/thorstenb/odpdown/pull/39) and [implemented here](https://github.com/romanofski/odpdown/tree/table_support/demo).
+
+```bash
+cd /home/arb/GitShares/OtherRepositories/odpdown/tablefix/odpdown
+
+git checkout table_support
+
+source activate py27
+
+python setup.py install
+```
+
 ## contents
 
 ### folder notebooks
@@ -30,7 +46,7 @@ This folder contains python scripts that help structure the notebooks and export
 
 ### folder website
 
-This doesn't work yet. It should ultimately export all the notebooks as a stand-alone website using pelican. 
+This doesn't work yet. It should ultimately export all the notebooks as a stand-alone website using pelican.
 
 
 ## Required Packages
